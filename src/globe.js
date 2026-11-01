@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { feature } from "topojson-client";
 import land from "world-atlas/land-110m.json";
 
-const INK = new THREE.Color("#ff99d3"), PALE = new THREE.Color("#fff0f7"), DOT = new THREE.Color("#ffd6ec");
+const INK = new THREE.Color("#ff99d3"), PALE = new THREE.Color("#ffd23f"), DOT = new THREE.Color("#ffd6ec");
 const FOV = 30;
 
 function landMask() {
