@@ -186,3 +186,12 @@ details p { padding: 0 22px 18px; }
   .js [data-in] { opacity: 1; transform: none; transition: none; }
   .pill, .dock button, .face img, summary::after { transition: none; }
 }
+
+/* A faint backing keeps the navigation readable over the dots. */
+.bar { position: relative; z-index: 2; background: color-mix(in srgb, var(--bg) 55%, transparent); backdrop-filter: blur(6px); }
+.next-pass { margin: 14px 0 0; font-size: 15px; }
+
+@media print {
+  .hero-stage, .views, .hint, .stage, .dock, .card, .find, .bar, .band, button { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+}

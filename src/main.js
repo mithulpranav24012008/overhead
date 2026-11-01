@@ -258,6 +258,10 @@ function workOutPasses() {
     for (const p of passes(place, found.satrec, from, { hours: 48, limit: 5 })) rows.push({ ...p, name, label, visible: canSee(place, found.satrec, p) });
   }
   rows.sort((a, b) => (b.visible - a.visible) || a.rise - b.rise);
+  const next = rows[0];
+  const line = $("#next-pass");
+  line.hidden = !next;
+  if (next) line.textContent = `Next over ${place.name}: ${next.label}, ${zoneTime(next.rise, true)}${next.visible ? ", you could see it" : ""}.`;
   list.replaceChildren();
   if (!rows.length) {
     const li = document.createElement("li");

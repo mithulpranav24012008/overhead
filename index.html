@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Overhead</title>
+<meta name="theme-color" content="#3d0012">
 <meta name="description" content="Every active satellite in orbit, in the place it is right now, on a 3D Earth you can turn. Pick a city to see what passes over it next.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,8 +66,10 @@
     <label for="find-input">Find a satellite</label>
     <input id="find-input" class="field" placeholder="ISS, Hubble, Starlink-1007" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="find-list">
     <ul class="results" id="find-list" role="listbox" hidden></ul>
+    <button type="button" class="text-btn" data-find="ISS (ZARYA)">See the ISS now</button>
   </div>
   <p class="clock"><span id="clock">Loading orbits</span> <button class="text-btn" type="button" id="now" hidden>Back to now</button></p>
+  <p class="next-pass" id="next-pass" hidden></p>
   <p class="hint">Drag the Earth to turn it. Click any dot to see what it is.</p>
 </section>
 

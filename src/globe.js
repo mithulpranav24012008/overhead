@@ -212,7 +212,7 @@ export function createGlobe(canvas, count) {
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       const px = ratio * Math.max(0.85, Math.min(1.25, Math.min(w, h) / 800));
-      dots.uniforms.px.value = px;
+      dots.uniforms.px.value = w < 700 ? px * 1.3 : px; // phone screens are small, so the dots need to be bigger to read
       ring.material.uniforms.px.value = ratio;
       home.material.uniforms.px.value = ratio;
     },
