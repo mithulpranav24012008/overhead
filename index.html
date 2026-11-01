@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Overhead</title>
+<meta name="description" content="Every active satellite in orbit, in the place it is right now, on a 3D Earth you can turn. Pick a city to see what passes over it next.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Headline:wght@300&family=Stack+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <canvas id="globe" role="img" aria-label="A 3D Earth with a point for every active satellite, each in its current position. Drag to turn it."></canvas>
+  <p class="tip" id="tip" hidden></p>
+</div>
+
+<div class="dock" id="dock" role="group" aria-label="Globe controls">
+  <div class="speeds" role="group" aria-label="Speed of time">
+    <button type="button" data-speed="1" aria-pressed="true">Live</button><button type="button" data-speed="60" aria-pressed="false">1 min/s</button><button type="button" data-speed="600" aria-pressed="false">10 min/s</button>
+  </div>
+  <div class="zoom" role="group" aria-label="Zoom">
+    <button type="button" data-zoom="1.25" aria-label="Zoom out">−</button><button type="button" data-zoom="0.8" aria-label="Zoom in">+</button>
+  </div>
+</div>
+
+<aside class="card" id="card" aria-label="Chosen satellite" hidden>
+  <button type="button" class="close" id="card-close" aria-label="Close">×</button>
+  <p class="card-fleet" id="card-fleet"></p>
+  <h2 class="card-name" id="card-name"></h2>
+  <dl class="facts">
+    <div><dt>Height</dt><dd id="f-height"></dd></div>
+    <div><dt>Speed</dt><dd id="f-speed"></dd></div>
+    <div><dt>Over</dt><dd id="f-over"></dd></div>
+    <div><dt>One orbit</dt><dd id="f-period"></dd></div>
+    <div><dt>Launched</dt><dd id="f-launch"></dd></div>
+    <div><dt>Now in</dt><dd id="f-light"></dd></div>
+    <div><dt>Next over <span data-city-name></span></dt><dd id="f-next"></dd></div>
+  </dl>
+  <label class="follow"><input type="checkbox" id="follow" checked> Keep it in view</label>
+</aside>
+
+<main>
+<nav class="bar" aria-label="Page">
+  <a class="mark" href="#top"><span class="spot" aria-hidden="true"></span>Overhead</a>
+  <span class="bar-links"><a href="#sky">Your sky</a><a href="#fleets">Who</a><a href="#height">How high</a><a href="#questions">Questions</a></span>
+</nav>
+
+<section class="hero" id="top">
+  <h1><span id="count-big">16,847</span> things are <span class="nowrap">over your head</span></h1>
+  <p class="lead">Every active satellite in orbit, in the place it is right now. Pick a city to see what passes over it next.</p>
+  <form class="pick" id="city-form" autocomplete="off">
+    <label for="city-input">Your city</label>
+    <div class="pick-row">
+      <input id="city-input" class="field" list="city-list" placeholder="Type a city" autocomplete="off">
+      <datalist id="city-list"></datalist>
+      <button class="pill" type="submit">Show my sky</button>
+    </div>
+    <button class="text-btn" type="button" id="locate">Use my location</button>
+    <p class="status" id="city-status" role="status"></p>
+  </form>
+  <div class="find">
+    <label for="find-input">Find a satellite</label>
+    <input id="find-input" class="field" placeholder="ISS, Hubble, Starlink-1007" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="find-list">
+    <ul class="results" id="find-list" role="listbox" hidden></ul>
+  </div>
+  <p class="clock"><span id="clock">Loading orbits</span> <button class="text-btn" type="button" id="now" hidden>Back to now</button></p>
+  <p class="hint">Drag the Earth to turn it. Click any dot to see what it is.</p>
+</section>
+
+<section class="sec" id="sky">
+  <h2><span class="dim">Over</span> <span data-city-name>your city</span> <span class="dim">right now</span></h2>
+  <p class="lead"><strong id="sky-count">0</strong> objects are above the horizon, and <strong id="sky-lit">0</strong> of them are in sunlight.</p>
+  <figure class="chart">
+    <canvas id="sky-chart" width="720" height="720" role="img" aria-label="A map of the sky over your city, with the horizon as the outer circle and straight up in the middle. Each dot is a satellite above the horizon now."></canvas>
+    <figcaption>Straight up is the middle, the horizon is the edge, north is at the top. Solid dots are in sunlight and rings are in Earth's shadow.</figcaption>
+  </figure>
+  <h3>The next passes you could look for</h3>
+  <ol class="passes" id="passes"><li class="muted">Working it out</li></ol>
+  <p class="note">"You could see it" means it's sunlit at its highest while your sky is dark. Weather and streetlights are up to you.</p>
+</section>
+
+<section class="band" aria-label="Four you can name">
+  <button type="button" class="face" data-find="ISS (ZARYA)"><img src="/img/iss.jpg" alt="The International Space Station against the curve of the Earth, photographed from a departing shuttle." width="320" height="320" loading="lazy"><span>International Space Station</span></button>
+  <button type="button" class="face" data-find="HST"><img src="/img/hubble.jpg" alt="The Hubble Space Telescope above the Earth after its final servicing mission." width="320" height="320" loading="lazy"><span>Hubble Space Telescope</span></button>
+  <button type="button" class="face" data-find-fleet="Starlink"><img src="/img/starlink.jpg" alt="A long exposure of Tübingen town hall at dusk, with a faint line of Starlink satellites crossing the deep blue sky." width="320" height="320" loading="lazy"><span>Starlink, seen from the ground</span></button>
+  <figure class="face"><img src="/img/sputnik.jpg" alt="A polished replica of Sputnik 1, a metal sphere with four long antennas." width="320" height="320" loading="lazy"><figcaption>Sputnik 1, 1957. For three months it was the whole list. It burned up in January 1958.</figcaption></figure>
+</section>
+
+<section class="sec" id="fleets">
+  <h2 id="fleet-head">Two in every three are Starlink</h2>
+  <p class="lead">Pick a fleet to light it up on the globe.</p>
+  <div class="fleets" id="fleet-list" role="group" aria-label="Fleets"></div>
+</section>
+
+<section class="sec" id="height">
+  <h2><span class="figure" id="height-count">0</span> <span class="dim">of them fly lower than</span> <span class="nowrap" id="height-km">600 km</span></h2>
+  <label class="slide" for="height-slider">Move the ceiling.<span class="desk-only"> The globe pulls back to show it.</span></label>
+  <input type="range" id="height-slider" min="0" max="1000" value="203" aria-describedby="height-note">
+  <p class="lead" id="height-note">Low orbit is where most of them are: close enough to take sharp pictures and answer quickly, and low enough that air still drags them down within years.</p>
+  <dl class="bands" id="bands"></dl>
+</section>
+
+<section class="sec" id="questions">
+  <h2>Questions</h2>
+  <div class="faq">
+    <details><summary>Is this really live?</summary><p>The positions are worked out in your browser for the current second, using the same SGP4 orbit model that tracking centres publish their data for. The orbit data itself is a snapshot: <span id="faq-age">it's updated regularly</span>. The clock on the page tells you what moment you're looking at.</p></details>
+    <details><summary>How accurate is it?</summary><p>For a fresh orbit, typically within a few kilometres. The error grows by a kilometre or more a day, and faster for very low satellites or ones that have just changed course. It's more than enough to find one in the sky, and not good enough to dock with.</p></details>
+    <details><summary>What does "active" leave out?</summary><p>Rocket bodies, dead satellites and debris. Trackers follow tens of thousands more of those, and they're not shown here. Some classified satellites aren't in this public list either.</p></details>
+    <details><summary>Why are some dots dimmer?</summary><p>They're in Earth's shadow. The shadow is worked out from where the Sun really is now. The day and night on the globe come from the same sum.</p></details>
+    <details><summary>Does it know where I am?</summary><p>It guesses a nearby city from your device's time zone, and nothing leaves your browser. "Use my location" asks your browser's permission first, and your position is only used on this page.</p></details>
+    <details><summary>Can I use the keyboard?</summary><p>Yes. Every control is a real button or field. With a satellite chosen, the arrow keys step through the list, and Escape puts it back.</p></details>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <p class="foot-mark"><span class="spot" aria-hidden="true"></span>Overhead</p>
+  <p class="credits">Orbit data from <a href="https://celestrak.org">CelesTrak</a>. Coastlines from <a href="https://www.naturalearthdata.com">Natural Earth</a>. Orbit model from <a href="https://github.com/shashwatak/satellite-js">satellite.js</a>. Photographs: International Space Station and Hubble by <a href="https://commons.wikimedia.org/wiki/File:STS-134_International_Space_Station_after_undocking.jpg">NASA</a>, public domain; Starlink over Tübingen by <a href="https://commons.wikimedia.org/wiki/File:Starlink_%C3%BCber_dem_Rathaus_in_T%C3%BCbingen.jpg">Dktue</a>, CC0; Sputnik replica by <a href="https://commons.wikimedia.org/wiki/File:Replica_of_Sputnik_1,_World_Museum_Liverpool_(4).jpg">Rept0n1x</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>.</p>
+</footer>
+<p class="sr" id="live" aria-live="polite"></p>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

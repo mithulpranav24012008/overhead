@@ -1,0 +1,22 @@
+{
+  "name": "overhead",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "data": "node scripts/fetch-data.mjs",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "satellite.js": "^7.1.0",
+    "three": "^0.170.0",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  },
+  "devDependencies": {
+    "vite": "^6.4.5"
+  },
+  "license": "MIT"
+}
