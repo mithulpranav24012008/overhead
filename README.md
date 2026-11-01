@@ -2,6 +2,8 @@
 
 Every active satellite in orbit, in the place it is right now, on a 3D Earth you can turn. Pick a city to see what passes over it next.
 
+**Try it: [https://mithulpranav24012008.github.io/overhead/](https://mithulpranav24012008.github.io/overhead/)**
+
 Built with Three.js, Vite and [satellite.js](https://github.com/shashwatak/satellite-js).
 
 ## What you can do
